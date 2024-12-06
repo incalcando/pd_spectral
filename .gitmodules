@@ -1,0 +1,12 @@
+[submodule "tester~/tester_dsp/idsp"]
+	path = tester~/tester_dsp/idsp
+	url = https://github.com/InstruoModular/idsp.git
+[submodule "test_me~/test_me_dsp/idsp"]
+	path = test_me~/test_me_dsp/idsp
+	url = https://github.com/InstruoModular/idsp.git
+[submodule "pd.cmake"]
+	path = pd.cmake
+	url = https://github.com/InstruoModular/pd.cmake.git
+[submodule "sl_test~/sl_test_dsp/idsp"]
+	path = sl_test~/sl_test_dsp/idsp
+	url = https://github.com/InstruoModular/idsp.git
