@@ -1,0 +1,37 @@
+#N canvas 1533 354 472 350 10;
+#X obj 74 211 sl_spectral~;
+#X obj 89 160 osc~ 440;
+#X obj 74 264 dac~;
+#X obj 136 246 env~;
+#X floatatom 136 269 5 0 0 0 - - - 0;
+#X obj 174 245 env~;
+#X floatatom 174 268 5 0 0 0 - - - 0;
+#X obj 39 183 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X obj 267 93 hsl 128 15 0 100 0 0 empty empty empty -2 -8 0 10 #fcfcfc
+#000000 #000000 0 1;
+#X obj 264 113 * 0.01;
+#X floatatom 264 136 5 0 0 0 - - - 0;
+#X msg 264 158 gain \$1;
+#X obj 264 181 s \$0_sl_spectral;
+#X obj 74 88 r \$0_sl_spectral;
+#X obj 74 134 list trim;
+#X obj 74 111 list prepend control;
+#X msg 39 160 info;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 0 1 2 1;
+#X connect 0 1 5 0;
+#X connect 1 0 0 1;
+#X connect 1 0 0 2;
+#X connect 3 0 4 0;
+#X connect 5 0 6 0;
+#X connect 7 0 0 0;
+#X connect 8 0 9 0;
+#X connect 9 0 10 0;
+#X connect 10 0 11 0;
+#X connect 11 0 12 0;
+#X connect 13 0 15 0;
+#X connect 14 0 0 0;
+#X connect 15 0 14 0;
+#X connect 16 0 0 0;
