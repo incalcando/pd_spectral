@@ -19,6 +19,7 @@ class sl_spectralTilde
     t_inlet* inlet_right;
     t_outlet* outlet_left;
     t_outlet* outlet_right;
+    t_outlet* outlet_info;
     int block_size;
     DspBuffer input;
     DspBuffer output;
@@ -28,7 +29,38 @@ class sl_spectralTilde
 // ─────────────────────────────────────
 static void on_bang(sl_spectralTilde *x)
 {
-    post("Hello from sl_spectral~");
+    // // post("Hello from sl_spectral~");
+    // std::array<std::array<float, 5>, 2> harmonics = x->sl_spectral->getHarmonics();
+    // t_atom configurationInfo[11];
+    // SETSYMBOL(configurationInfo, gensym("harmonics"));
+    // SETFLOAT(configurationInfo+1, harmonics[0][0]);
+    // SETFLOAT(configurationInfo+2, harmonics[1][0]);
+    // SETFLOAT(configurationInfo+3, harmonics[0][1]);
+    // SETFLOAT(configurationInfo+4, harmonics[1][1]);
+    // SETFLOAT(configurationInfo+5, harmonics[0][2]);
+    // SETFLOAT(configurationInfo+6, harmonics[1][2]);
+    // SETFLOAT(configurationInfo+7, harmonics[0][3]);
+    // SETFLOAT(configurationInfo+8, harmonics[1][3]);
+    // SETFLOAT(configurationInfo+9, harmonics[0][4]);
+    // SETFLOAT(configurationInfo+10, harmonics[1][4]);
+    // outlet_list(x->outlet_info, gensym("list"),11,configurationInfo);
+
+    t_atom configurationInfo[2];
+    SETSYMBOL(configurationInfo, gensym("euclidean"));
+    SETFLOAT(configurationInfo+1, x->sl_spectral->get_euclidean());
+    outlet_list(x->outlet_info, gensym("list"),2,configurationInfo);
+    SETSYMBOL(configurationInfo, gensym("cosineSimilarity"));
+    SETFLOAT(configurationInfo+1, x->sl_spectral->get_cosineSimilarity());
+    outlet_list(x->outlet_info, gensym("list"),2,configurationInfo);
+    SETSYMBOL(configurationInfo, gensym("flatness"));
+    SETFLOAT(configurationInfo+1, x->sl_spectral->get_flatness());
+    outlet_list(x->outlet_info, gensym("list"),2,configurationInfo);
+    SETSYMBOL(configurationInfo, gensym("centroid"));
+    SETFLOAT(configurationInfo+1, x->sl_spectral->get_zeroCrossingRate());
+    outlet_list(x->outlet_info, gensym("list"),2,configurationInfo);
+    // SETSYMBOL(configurationInfo, gensym("frequency"));
+    // SETFLOAT(configurationInfo+1, x->sl_spectral->get_autocorr_freq());
+    // outlet_list(x->outlet_info, gensym("list"),2,configurationInfo);
 }
 
 // ─────────────────────────────────────
@@ -83,6 +115,8 @@ static t_int *process(t_int *w)
         x->input[1][i] = in_right[i];
     }
 
+    
+
     //DO YOUR PROCESSING HERE
     x->sl_spectral->process(x->input, x->output);
 
@@ -102,10 +136,12 @@ static t_int *process(t_int *w)
     //     //something else
     // }
 
-    for(int i = 0; i < 2048; i++)
-    {
-        x->sl_spectral->plot[i] = x->sl_spectral->get_ringbuf_L()[i];
-    }
+    // for(int i = 0; i < 2048; i++)
+    // {
+    //     x->sl_spectral->plot[i] = x->sl_spectral->get_ringbuf_L()[i];
+    // }
+
+    on_bang(x);
 
     return (w + 7);
 }
@@ -114,6 +150,7 @@ static t_int *process(t_int *w)
 static void sl_spectral_tilde_dsp(sl_spectralTilde *x, t_signal **sp)
 {
     x->sample_rate = sp[0]->s_sr;
+    x->sl_spectral->set_sample_rate(x->sample_rate);
     dsp_add(process, 6, x,
         sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[0]->s_n);
 }
@@ -128,6 +165,7 @@ static void *sl_spectral_tilde_new(void)
     x->inlet_right = inlet_new(&x->object, &x->object.ob_pd, &s_signal, &s_signal);
     x->outlet_left = outlet_new(&x->object, &s_signal);
     x->outlet_right = outlet_new(&x->object, &s_signal);
+    x->outlet_info = outlet_new(&x->object, gensym("list"));
 
     return x;
 }
@@ -139,6 +177,7 @@ static void sl_spectral_tilde_free(sl_spectralTilde *x)
     inlet_free(x->inlet_right);
     outlet_free(x->outlet_left);
     outlet_free(x->outlet_right);
+    outlet_free(x->outlet_info);
 }
 
 // ─────────────────────────────────────

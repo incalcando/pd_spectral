@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "mkdir -p build && cd build && cmake -DCMAKE_INSTALL_PREFIX=${workspaceFolder} -Wno-dev .. && make -j",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Generated task to build the project using CMake and Make"
+        },
+        {
+            "label": "install",
+            "type": "shell",
+            "command": "mkdir -p output && cp ${workspaceFolder}/build/sl_spectral~.pd_linux output/sl_spectral~.pd_linux && cp -n ${workspaceFolder}/sl_spectral~/sl_spectral~-help.pd output/sl_spectral~-help.pd ",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Task to install the project"
+        },
+        {
+            "label": "build-and-install",
+            "dependsOrder": "sequence",
+            "dependsOn": ["build", "install"]
+        }
+    ]
+}
